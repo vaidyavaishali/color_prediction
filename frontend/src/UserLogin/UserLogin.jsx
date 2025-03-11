@@ -23,8 +23,8 @@ const Login = () => {
 
       if (response.status === 200) {
         // Save user data to state or local storage
-       
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+        localStorage.setItem('user', JSON.stringify(response.data.user));
         setMessage(`Welcome, ${response.data.user.username}!`);
         navigate('/color');
         window.location.reload();
@@ -37,16 +37,15 @@ const Login = () => {
     }
   };
 
+  // kingMalls
   return (
     <RegistrationPageWrapper>
       <LeftContainer>
         {/* <Logo src={fastbetLogo} alt="Shri Matka Logo" /> */}
-        <Logo  alt="" />
+        {/* <Logo  alt="" /> */}
         <DownloadButton>
-          For Better Experience
-          <br />
-          Download 98fastbet App
-        </DownloadButton>
+          KingMalls
+        </DownloadButton >
         <SubHeading>Login with Email Id</SubHeading>
         <FormContainer onSubmit={handleLogin}>
           <Label>Username</Label>
@@ -101,7 +100,7 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1rem;
+  padding: 4rem 1rem;
   color: #fff;
   @media (max-width: 1024px) {
     width: 100%;
@@ -130,10 +129,10 @@ const DownloadButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
   text-align: center;
   letter-spacing: 1px;
-  font-size: 1rem;
+  font-size: 2rem;
   animation: changeBgColor 1.5s infinite;
   @keyframes changeBgColor {
     0% { background-color: #e53935; }

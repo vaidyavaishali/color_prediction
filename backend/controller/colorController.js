@@ -1,16 +1,13 @@
 const { colorModels } = require('../models/ColorModel');
 const User = require('../models/User');
+// const User_Wallet = require('../\');
 // Create a new game entry (Place Bet)
 exports.placeBet = async (req, res) => {
-    console.log("ok1")
     try {
-        const { amount, walletBalance, selectedNumber, newRoundId, user } = req.body;
-
-        console.log(req.body, "ok")
-       
-
+        const { amount, walletBalance, selectedNumber, newRoundId, user, referalId } = req.body;
         const existuser = await User.findOne({ _id: user });
-        console.log(existuser, "existuser")
+        console.log(req.body)
+        // console.log(existuser, "existuser")
         if (existuser) {
             existuser.wallet -= amount;
             await existuser.save();
@@ -19,7 +16,6 @@ exports.placeBet = async (req, res) => {
         if (amount > existuser.wallet) {
             return res.status(400).json({ message: "Insufficient balance" });
         }
-
         const newEntry = new colorModels({
             roundId: newRoundId,
             walletBalance: walletBalance - amount,
@@ -27,7 +23,8 @@ exports.placeBet = async (req, res) => {
             predictedColor: selectedNumber,
             resultColor: null,
             winAmt: 0,
-
+            user: user,
+            referalId: referalId
         });
 
 
@@ -43,14 +40,17 @@ exports.placeBet = async (req, res) => {
 exports.processResult = async (req, res) => {
     console.log("ok")
     try {
-        const { roundId, userId } = req.params;
-        const { winningNumber } = req.body;
-        console.log(req.body)
+        const { roundId } = req.params;
+        const { winningNumber, userId } = req.body;
+        // console.log(req.body)
         const game = await colorModels.findOne({ roundId: roundId });
-        console.log(game)
+        // console.log(game)
 
-        const user = await User.findOne({ user: userId });
-        
+        // const wallet = await User_Wallet.findOne({ user: userId });
+        const user = await User.findOne({ _id: userId });
+        // console.log(userId, "user")
+        // cons
+
         if (!game) return res.status(404).json({ message: "Game not found" });
         let winAmount = 0;
         let isWinner = false;
@@ -59,21 +59,33 @@ exports.processResult = async (req, res) => {
             isWinner = "Won";
             // game.resultColor = winningNumber
             if (user) {
-                user.wallet += winAmount;
+                user.wallet = parseFloat((user.wallet + winAmount).toFixed(2));
+                // wallet.balance += winAmount
                 await user.save();
             }
         } else {
-            winAmount = 0;
+            winAmount = game.betAmout * 0.05;
+            // console.log(winAmount)
             isWinner = "Lost";
+            if (user) {
+                user.wallet = parseFloat((user.wallet + winAmount).toFixed(2));
+                // wallet.balance += winAmount
+                await user.save();
+            }
         }
-
+        // await wallet.save();
         game.resultColor = winningNumber;
         game.winAmt = winAmount;
         game.isWin = isWinner;
         if (isWinner) {
-            game.walletBalance += winAmount;
+            game.walletBalance = user.wallet + game.betAmout * 0.05;
+        } else {
+            game.walletBalance = user.wallet + game.betAmout * 0.05
         }
-        // console.log("after update", game)
+
+        // game.walletBalance += winAmount
+        console.log("after update", game)
+        console.log("after update", user)
         await game.save();
         res.status(200).json({ success: true, message: isWinner ? "You won!" : "You lost!", game });
     } catch (error) {
@@ -86,7 +98,18 @@ exports.processResult = async (req, res) => {
 // Fetch game history
 exports.getHistory = async (req, res) => {
     try {
-        const history = await colorModels.find().sort({ createdAt: -1 }).limit(2);
+        const { userId } = req.params
+        const history = await colorModels.find({ user: userId })
+        res.json(history);
+    } catch (error) {
+        console.error("Error fetching history:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+exports.getallHistory = async (req, res) => {
+    try {
+        // const { userId } = req.params
+        const history = await colorModels.find()
         res.json(history);
     } catch (error) {
         console.error("Error fetching history:", error);

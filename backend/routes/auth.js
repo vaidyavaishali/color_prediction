@@ -3,43 +3,19 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { referalCodeModels } = require('../models/refralCode');
 const JWT_SECRET = 'bunneybet';
-// Signup
-// router.post('/signup', async (req, res) => {
-//   const { name, email, phone, password } = req.body;
-//   console.log(req.body);
-//   try {
-//     const user = new User({ name, email, phone, password, state, city, role });
-//     await user.save();
-//     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
-//     res.status(201).json({ token });
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
-// Login
-// router.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) throw new Error('User not found');
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) throw new Error('Invalid credentials');
-//     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
-//     res.json({ token });
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
-// module.exports = router;
 
 router.post('/signup', async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, referalId } = req.body;
   // console.log(req.body)
   // Ensure all fields are provided
-  if (!username || !email || !password) {
+  const referal = await referalCodeModels.findOne({ referalCode: referalId });
+  console.log(referal, referalId, "referal")
+  if (!referal) {
+    return res.status(400).json({ message: 'Invalid referal Id' });
+  }
+  if (!referalId || !username || !email || !password) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -49,18 +25,10 @@ router.post('/signup', async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    // let userNo;
-    // let count = 5000;
-    // do {
-    //   userNo = `c${count}`;
-    //   count++;
-    // } while (await User.findOne({ userNo:userNo }));
-    // const exist = await User.findOne({ userNo:userNo });
-    // console.log(exist)
     const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create a new user
     const newUser = new User({
+      referalId: referalId,
       username,
       email,
       password: hashedPassword,
@@ -76,7 +44,7 @@ router.post('/signup', async (req, res) => {
     // Respond with success
     res.status(201).json({
       message: 'User registered successfully',
-      user: { id: savedUser._id, username: savedUser.username, email: savedUser.email, userNo: savedUser.userNo },
+      user: { id: savedUser._id, username: savedUser.username, email: savedUser.email, userNo: savedUser.userNo, referalId: savedUser.referalId },
     });
   } catch (err) {
     console.error(err);
@@ -115,6 +83,7 @@ router.post('/login', async (req, res) => {
         username: user.username,
         email: user.email,
         walletBalance: user.wallet || 0,
+        referalId: user.referalId
       },
     });
   } catch (err) {

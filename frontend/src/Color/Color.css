@@ -47,10 +47,16 @@
   
   /* Main Content */
   .main-content {
-    max-width: 1200px;
+    /* max-width: 1200px; */
+    width: 90%;
     margin: 0 auto;
     display: grid;
     gap: 2rem;
+  }
+  @media screen and (max-width: 768px) {
+    .main-content{
+      width: 100%;
+    }
   }
   
   .game-section,
@@ -92,11 +98,11 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
   
   .color-btn {
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
     border-radius: 0.75rem;
     font-size: 1.25rem;
     font-weight: bold;
@@ -120,10 +126,14 @@
   }
   
   .disabled {
-    background: #4b4b6b;
+    /* background: rgba(127, 127, 179, 0.5); Make background semi-transparent */
     cursor: not-allowed;
     opacity: 0.7;
-  }
+    pointer-events: none;
+    filter: grayscale(20%);
+    backdrop-filter: blur(5px); /* Apply blur effect */
+}
+
   
   /* Number Grid */
   .number-grid {
@@ -131,6 +141,9 @@
     grid-template-columns: repeat(5, 1fr);
     gap: 0.75rem;
     margin-bottom: 2rem;
+    @media screen and (max-width: 768px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
   
   .number-btn {
@@ -139,6 +152,7 @@
     font-size: 1.25rem;
     font-weight: bold;
     transition: transform 0.2s;
+   
   }
   
   .number-btn:not(.disabled):hover {
@@ -254,6 +268,7 @@
   .result-modal-content {
     background: linear-gradient(135deg, #2a2a4b 0%, #3b3b6b 100%);
     border-radius: 1rem;
+    opacity: 0.8;
     padding: 1.5rem;
     width: 100%;
     max-width: 28rem;
@@ -406,9 +421,9 @@
       font-size: 2rem;
     }
   
-    .color-buttons {
-      grid-template-columns: 1fr;
-    }
+    /* .color-buttons {
+      /* grid-template-columns: 3fr; */
+    /* } */ */
   
     .number-grid {
       grid-template-columns: repeat(5, 1fr);
@@ -426,7 +441,7 @@
     }
   
     .number-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
   
     .history-table th,
@@ -434,3 +449,16 @@
       padding: 0.5rem;
     }
   }
+
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .history-table thead {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Keeps header visible while scrolling */
+    z-index: 10;
+  }
+  

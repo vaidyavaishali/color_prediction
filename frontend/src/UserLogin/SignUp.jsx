@@ -7,7 +7,7 @@ import styled from 'styled-components';
 const RegistrationPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
+const [referalId, setReferalId] = useState('');
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -30,7 +30,7 @@ const RegistrationPage = () => {
  
     e.preventDefault();
 
-    const userData = { username, email, password };
+    const userData = { username, email, password, referalId };
     console.log(userData)
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/signup`, userData);
@@ -55,15 +55,16 @@ const RegistrationPage = () => {
   return (
     <RegistrationPageWrapper>
       <LeftContainer>
-        <Logo  alt="" />
+        {/* <Logo  alt="" /> */}
         <DownloadButton>
-          For Better Experience
-          <br />
-          Download 98fastbet App
-        </DownloadButton>
+          KingMalls
+        </DownloadButton >
 
         <SubHeading>Create your account</SubHeading>
         <FormContainer onSubmit={handleSubmit}>
+        <Label>Referal Id</Label>
+          <Input type="text" name="referalId" placeholder="Enter Referal Id" value={referalId}
+            onChange={(e) => setReferalId(e.target.value)} />
           <Label>UserName</Label>
           <Input type="text" name="username" placeholder="Enter Your Name" value={username}
             onChange={(e) => setUsername(e.target.value)} />
@@ -111,7 +112,7 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1rem;
+  padding: 4rem 1rem;
   color: #fff;
     @media (max-width: 1024px) {
     width: 100%;
@@ -132,24 +133,19 @@ const Logo = styled.img`
   width: 100px;
 `;
 
-// const Heading = styled.h2`
-//   font-size: 2rem;
-//   margin-bottom: 1.5rem;
-//   text-transform: uppercase;
-// `;
 
 const DownloadButton = styled.button`
   background-color: transparent;
   color: #fff;
   border: 2px solid white;
-  padding: 0.2rem 2rem;
+  padding: 0.5rem 2rem;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
   text-align: center;
   letter-spacing: 1px;
-  font-size: 1rem;
+  font-size: 2rem;
   animation: changeBgColor 1.5s infinite;
 
   @keyframes changeBgColor {
