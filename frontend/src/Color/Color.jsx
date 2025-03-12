@@ -178,7 +178,7 @@ const Color = () => {
       // console.log("ok")
       try {
         const { data } = await axios.put(
-          `${process.env.REACT_APP_API_URL}/api/color/process-result/${roundId}`,
+          `${Api_url}/api/color/process-result/${roundId}`,
           {
             winAmt: isWin ? localStorage.getItem("betAmount") * 1.98 : 0,
             winningNumber: localStorage.getItem("colorResult"),
@@ -241,7 +241,7 @@ const Color = () => {
     try {
       // const newRoundId = `R${Date.now().toString()}`; // Generate roundId if needed
       // setRoundId(newRoundId);
-      const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/api/color/place-bet`, {
+      const { data } = await axios.post(`${Api_url}/api/color/place-bet`, {
         amount: betAmount,
         user: profile.userId,
         selectedNumber,
