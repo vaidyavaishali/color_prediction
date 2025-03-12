@@ -93,7 +93,27 @@
     display: inline-block;
   }
 
-
+  /* <button
+  key={number}
+  className={`number-btn ${color}-number${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? 'disabled'  : ''} shining-effect`}
+  disabled={
+    !isBettingOpen ||
+    (timer_thirty && timeLeft <= 10) ||
+    (!timer_thirty && timeLeft <= 30)
+  }
+  onClick={() => handleNumberSelect(number)}
+>
+  {number}
+</button>
+  
+<button
+key={number}
+className={`number-btn ${color}-number ${!isBettingOpen || timeLeft <= 10 && 'disabled'} shining-effect`}
+disabled={!isBettingOpen || timeLeft <= 10}
+onClick={() => handleNumberSelect(number)}
+>
+{number}
+</button> */
 
   /* Color Buttons */
   .color-buttons {
