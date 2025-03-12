@@ -3,6 +3,7 @@ import './Color.css';
 import axios from 'axios';
 import { useProfile } from '../context/ProfileContext';
 const Color = () => {
+    const Api_url = "https://color-prediction-api.vercel.app"
   const { profile, fetchNameWallet } = useProfile();
   // const [timeLeft, setTimeLeft] = useState(30);
   // const [selectedNumber, setSelectedNumber] = useState(null);
@@ -32,7 +33,7 @@ const Color = () => {
   }, []);
 
   const fetchData = async () => {
-    const Api_url = "https://color-prediction-api.vercel.app"
+  
     try {
       localStorage.removeItem("prevRoundId")
       const response = await axios.get(`${Api_url}/api/color/get-lastRoundId`);
