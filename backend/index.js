@@ -19,5 +19,5 @@ app.use('/api', authRoutes);
 app.use('/api/color', colorPredictionRoutes);
 app.use('/api',adminRoutes)
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// const PORT = process.env.PORT || 8080;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
