@@ -8,9 +8,10 @@ export const MobileSidebar = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { title: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
-    { title: "Products", path: "/dashboard/products", icon: <FaBox /> },
-    { title: "Users", path: "/dashboard/users", icon: <FaUsers /> },
+    { title: "Dashboard", path: "/admin/dashboard", icon: <FaTachometerAlt /> },
+    { title: "Manage Bets", path: "/admin/manage-bets", icon: <FaBox /> },
+    { title: "Random Numbers", path: "/admin/random-numbers", icon: <FaUsers /> },
+    { title: "Referal Id", path: "/admin/raferalId", icon: <FaUsers /> },
   ];
 
   const logout = () => {

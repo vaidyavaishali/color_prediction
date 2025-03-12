@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-import Products from './pages/Product';
+
 import { AuthProvider, useAuth } from './contextAPI/AuthContext';
-import UserManagement from './pages/Users';
 import Layout from './pages/Layout';
 import { SidebarProvider } from './contextAPI/sidebarContext';
 import AdminLogin from './pages/Login';
@@ -26,16 +25,7 @@ const App = () => {
                 path="/admin/dashboard"
                 element={<Dashboard />}
               />
-              <Route
-                path="/dashboard/products"
-                element={<Products />}
-              />
-
-              {/* Users Management Route */}
-              <Route
-                path="/dashboard/users"
-                element={<UserManagement />}
-              />
+            
               <Route
                 path="/admin/random-numbers"
                 element={<AdminRandomNumbers />}
