@@ -9,7 +9,7 @@ const Color = () => {
 
   const [selectedNumber, setSelectedNumber] = useState(() => sessionStorage.getItem("selectedNumber") || null);
   const [betAmount, setBetAmount] = useState(() => sessionStorage.getItem("betAmount") || 0);
-  const [roundId, setRoundId] = useState(`R${Date.now().toString()}`);
+  const [roundId, setRoundId] = useState(localStorage.getItem("prevRoundId"));
   // const [roundId, setRoundId] = useState();
 
   // const [betAmount, setBetAmount] = useState(0);
@@ -24,42 +24,39 @@ const Color = () => {
   const [period, setPeriod] = useState(1);
   const [isBettingOpen, setIsBettingOpen] = useState(true);
   // const [roundId, setRoundId] = useState(() => `R${Date.now().toString()}`);
+  const [prevRoundId, setPrevRoundId] = useState("")
+  const [timer_thirty, setTimertimer_thirty] = useState(true)
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      localStorage.removeItem("prevRoundId")
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/get-lastRoundId`);
+      console.log(response.data.roundId)
+      localStorage.setItem("prevRoundId", response.data.roundId)
+      setPrevRoundId(response.data.roundId);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+
+
+
   useEffect(() => {
     sessionStorage.setItem("selectedNumber", selectedNumber);
     sessionStorage.setItem("betAmount", betAmount);
 
   }, [selectedNumber, betAmount]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      localStorage.setItem("roundId", `R${Date.now().toString()}`);
-    }, 40000);
-    return () => clearInterval(timer);
-  }, [roundId]);
 
   const [colorResult, setColorResult] = useState("");
   const [historyById, setHistoryByd] = useState([])
   useEffect(() => {
     fetchNameWallet();
   }, [profile]);
-  // console.log(walletBalance, "walletBalance")
-  // useEffect(() => {
-  //   fetchGameHistory()
-  //   const timer = setInterval(() => {
-  //     setTimeLeft(prev => {
-  //       if (prev <= 1) {
-  //         handleGameEnd();
-  //         const newRoundId = `R${Date.now().toString()}`;
-  //         setRoundId(newRoundId);
-  //         localStorage.setItem("roundId", newRoundId);  
-  //         return 30;
-
-  //       }
-  //       return prev - 1;
-  //     });
-  //   }, 1000);
-  //   return () => clearInterval(timer);
-  // }, []);
 
   useEffect(() => {
     fetchGameHistory();
@@ -69,7 +66,9 @@ const Color = () => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           handleGameEnd();
-          const newRoundId = `R${Date.now().toString()}`;
+          fetchRandomNumber();
+          const PreviousRoundId = localStorage.getItem("prevRoundId")
+          const newRoundId = `R${parseInt(PreviousRoundId.slice(1)) + 1}`;
           setRoundId(newRoundId);
           localStorage.setItem("roundId", newRoundId);
           return timerDuration; // Restart timer
@@ -83,22 +82,16 @@ const Color = () => {
 
 
 
-  // const toggleTimer = () => {
-  //   // console.log("click")
-  //   setTimerDuration(prev => (prev === 30 ? 60 : 30));
-  //   setTimeLeft(prev => (prev === 30 ? 60 : 30));
-  //   const newRoundId = `R${Date.now().toString()}`;
-  //   setRoundId(newRoundId);
-  //   localStorage.setItem("roundId", newRoundId)
-  // };
-
-  const toggleTimer = () => {
+  const toggleTimer = (timer) => {
     setTimerDuration(prev => {
-      const newDuration = prev === 30 ? 60 : 30;
+      const newDuration = timer;
       setTimeLeft(newDuration); // Reset timeLeft immediately
-      const newRoundId = `R${Date.now().toString()}`;
+      const PreviousRoundId = localStorage.getItem("prevRoundId")
+      const newRoundId = `R${parseInt(PreviousRoundId.slice(1)) + 1}`;
       setRoundId(newRoundId);
-      localStorage.setItem("roundId", newRoundId)
+      localStorage.removeItem("prevRoundId")
+      localStorage.setItem("prevRoundId", newRoundId);
+
       return newDuration;
     });
   };
@@ -282,24 +275,51 @@ const Color = () => {
       <div className="header">
         <h1 className="title">Color Prediction</h1>
         <div className="balance">Balance: ₹{profile.walletBalance}</div>
-        <button
-          className="toggle-btn"
-          onClick={toggleTimer}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#6200ea',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: '16px',
-            cursor: 'pointer',
-            transition: 'background-color 0.3s ease',
-          }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = '#4500b5')}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = '#6200ea')}
-        >
-          Toggle Timer ({timerDuration > 30 ? '1 min' : '30 sec'})
-        </button>
+        {/* {timer_thirty ? */}
+        <div style={{ display: "flex", "gap": "20px", "justifyContent": "center" }}>
+          <button
+            className="toggle-btn"
+            // onClick={toggleTimer}
+            onClick={() => { setTimertimer_thirty(true); toggleTimer(30) }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: timer_thirty ? '#6200ea' : "#cccc",
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              fontSize: '16px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = '#4500b5')}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = '#6200ea')}
+          >
+            {/* Toggle Timer ({timerDuration > 30 ? '1 min' : '30 sec'}) */}
+            30 Sec
+          </button>
+          <button
+            className="toggle-btn"
+            // onClick={toggleTimer}
+            onClick={() => { setTimertimer_thirty(false); toggleTimer(60) }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: !timer_thirty ? '#6200ea' : "#cccc",
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              fontSize: '16px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s ease',
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = '#4500b5')}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = '#6200ea')}
+          >
+            {/* Toggle Timer ({timerDuration > 30 ? '1 min' : '30 sec'}) */}
+            1 Min
+          </button>
+        </div>
+
+        {/* } */}
       </div>
       <div className="main-content">
         <div className="game-section">
@@ -315,21 +335,57 @@ const Color = () => {
               </div>
             </div>
             <div className="color-buttons">
-              <button disabled={!isBettingOpen || timeLeft <= 10} className={`color-btn green-btn ${!isBettingOpen || timeLeft <= 10 && 'disabled'}`} onClick={() => handleNumberSelect('green')}>Green</button>
-              <button disabled={!isBettingOpen || timeLeft <= 10} className={`color-btn violet-btn ${!isBettingOpen || timeLeft <= 10 && 'disabled cursor-not-allowed'}`} onClick={() => handleNumberSelect('violet')}>Violet</button>
-              <button disabled={!isBettingOpen || timeLeft <= 10} className={`color-btn red-btn ${!isBettingOpen || timeLeft <= 10 && 'disabled'}`} onClick={() => handleNumberSelect('red')}>Red</button>
+              <button disabled={
+                !isBettingOpen ||
+                (timer_thirty && timeLeft <= 10) ||
+                (!timer_thirty && timeLeft <= 30)
+              } className={`color-btn green-btn  ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? 'disabled cursor-not-allowed' : ''}`} onClick={() => handleNumberSelect('green')}>Green</button>
+
+              {/* <button disabled={!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)} className={`color-btn violet-btn ${!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30) && 'disabled cursor-not-allowed'}`} onClick={() => handleNumberSelect('violet')}>Violet</button> */}
+
+              <button
+                disabled={
+                  !isBettingOpen ||
+                  (timer_thirty && timeLeft <= 10) ||
+                  (!timer_thirty && timeLeft <= 30)
+                }
+                className={`color-btn violet-btn ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? 'disabled cursor-not-allowed' : ''}`}
+                onClick={() => handleNumberSelect('violet')}
+              >
+                Violet
+              </button>
+
+              <button disabled={
+                !isBettingOpen ||
+                (timer_thirty && timeLeft <= 10) ||
+                (!timer_thirty && timeLeft <= 30)
+              } className={`color-btn red-btn  ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? 'disabled cursor-not-allowed' : ''}`} onClick={() => handleNumberSelect('red')}>Red</button>
             </div>
 
             <div className="number-grid">
               {numbers.map(({ number, color }) => (
+                // <button
+                //   key={number}
+                //   className={`number-btn ${color}-number${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? 'disabled'  : ''} shining-effect`}
+                //   disabled={
+                //     !isBettingOpen ||
+                //     (timer_thirty && timeLeft <= 10) ||
+                //     (!timer_thirty && timeLeft <= 30)
+                //   }
+                //   onClick={() => handleNumberSelect(number)}
+                // >
+                //   {number}
+                // </button>
+
                 <button
                   key={number}
-                  className={`number-btn ${color}-number ${!isBettingOpen || timeLeft <= 10 && 'disabled'} shining-effect`}
+                  className={`number-btn ${color}-number ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) && 'disabled'}  ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? '' :"shining-effect" } `}
                   disabled={!isBettingOpen || timeLeft <= 10}
                   onClick={() => handleNumberSelect(number)}
                 >
                   {number}
                 </button>
+
               ))}
             </div>
           </div>

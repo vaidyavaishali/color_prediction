@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const colorController = require('../controller/colorController');
-const { getAllRandomNumbers, addRandomNumber, getRandomNumberById , deleteRandomNumber} = require('../controller/selectColorCOntroller');
+const { getAllRandomNumbers, addRandomNumber, getRandomNumberById , deleteRandomNumber, getLastRoundId} = require('../controller/selectColorCOntroller');
 const { deleteReferralCode, getAllReferralCodes, addReferralCode } = require('../controller/referalCodeController');
 
 router.post('/place-bet', colorController.placeBet);  // Place a bet
@@ -15,11 +15,12 @@ router.get('/get-random-color', getAllRandomNumbers)
 router.post('/select-random-color', addRandomNumber)
 router.get('/get-random-color-by-id/:roundId', getRandomNumberById)
 router.delete('/delete-random-color/:roundId', deleteRandomNumber)
+router.get('/get-lastRoundId', getLastRoundId)
 
 router.get('/get-referal-code', getAllReferralCodes)
 router.post('/add-referal-code', addReferralCode)
 // router.get('/get-random-color-by-id/:roundId', getRandomNumberById)
-router.delete('/add-referal-code/:id', deleteReferralCode)
+router.delete('/delete-referal-code/:id', deleteReferralCode)
 
 
 module.exports = router;

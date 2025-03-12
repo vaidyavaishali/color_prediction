@@ -1,11 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Product';
-import Login from './pages/Login'; // Import Login component
 import { AuthProvider, useAuth } from './contextAPI/AuthContext';
 import UserManagement from './pages/Users';
 import Layout from './pages/Layout';
 import { SidebarProvider } from './contextAPI/sidebarContext';
+import AdminLogin from './pages/Login';
+import AdminRandomNumbers from './pages/RandomNumber';
+import GetBetData from './pages/ManageBets';
+import AdminReferralCodes from './pages/ReferalId';
 
 const App = () => {
   const { isAuthenticated } = useAuth(); // Access authentication state directly
@@ -17,24 +20,12 @@ const App = () => {
           <Routes>
             {/* Login Route */}
 
-            <Route path="/" element={<Login />} />
-
-            {/* Dashboard Main Route */}
-            {/* <Route
-            path="/dashboard"
-            element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
-          /> */}
+            <Route path="/" element={<AdminLogin />} />
             <Route path="/" element={<Layout />}>
               <Route
-                path="/dashboard"
+                path="/admin/dashboard"
                 element={<Dashboard />}
               />
-
-              {/* Products Route */}
-              {/* <Route
-            path="/dashboard/products"
-            element={isAuthenticated ? <Products /> : <Navigate to="/login" />}
-          /> */}
               <Route
                 path="/dashboard/products"
                 element={<Products />}
@@ -44,6 +35,18 @@ const App = () => {
               <Route
                 path="/dashboard/users"
                 element={<UserManagement />}
+              />
+              <Route
+                path="/admin/random-numbers"
+                element={<AdminRandomNumbers />}
+              />
+              <Route
+                path="/admin/manage-bets"
+                element={<GetBetData />}
+              />
+              <Route
+                path="/admin/raferalId"
+                element={<AdminReferralCodes />}
               />
             </Route>
             {/* Redirect to login if no match */}

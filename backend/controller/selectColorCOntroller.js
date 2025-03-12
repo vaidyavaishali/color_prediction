@@ -9,6 +9,14 @@ const getAllRandomNumbers = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+const getLastRoundId = async (req, res) => {
+    try {
+        const roundId = await randomcolorModels.findOne().sort({ createdAt: -1 });
+        res.status(200).json(roundId);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 // Get All Random Numbers
 const getRandomNumberById = async (req, res) => {
     try {
@@ -52,4 +60,4 @@ const deleteRandomNumber = async (req, res) => {
     }
 };
 
-module.exports = { getAllRandomNumbers, addRandomNumber, getRandomNumberById, deleteRandomNumber };
+module.exports = { getAllRandomNumbers, addRandomNumber, getRandomNumberById, deleteRandomNumber, getLastRoundId };

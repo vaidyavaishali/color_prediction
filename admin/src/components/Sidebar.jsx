@@ -3,13 +3,15 @@ import { FaTachometerAlt, FaBox, FaUsers, FaSignOutAlt, FaBars } from "react-ico
 import { useSidebar } from "../contextAPI/sidebarContext";
 export const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar(); 
-  const user = sessionStorage.getItem("username");
+  const user = JSON.parse( localStorage.getItem("admin"));
   const navigate = useNavigate();
+  console.log(user)
 
   const navItems = [
-    { title: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
-    { title: "Products", path: "/dashboard/products", icon: <FaBox /> },
-    { title: "Users", path: "/dashboard/users", icon: <FaUsers /> },
+    { title: "Dashboard", path: "/admin/dashboard", icon: <FaTachometerAlt /> },
+    { title: "Manage Bets", path: "/admin/manage-bets", icon: <FaBox /> },
+    { title: "Random Numbers", path: "/admin/random-numbers", icon: <FaUsers /> },
+    { title: "Referal Id", path: "/admin/raferalId", icon: <FaUsers /> },
   ];
 
   const logout = () => {
@@ -20,14 +22,14 @@ export const Sidebar = () => {
 
   return (
     <div
-      className={`bg-black text-white h-screen ${isSidebarOpen ? "w-1/6" : "w-20"} transition-all duration-300 overflow-y-auto px-2 custom-scrollbar relative hidden md:block`}
+      className={`bg-black text-white h-screen ${isSidebarOpen ? "w-1/5" : "w-20"} transition-all duration-300 overflow-y-auto px-2 custom-scrollbar relative hidden md:block`}
     >
       <div
         className={`bg-black text-white flex items-center h-auto w-full sticky top-0 py-5 mt-3 ${isSidebarOpen ? "justify-between" : "justify-center"}`}
       >
         {isSidebarOpen && (
           <h1 className="text-3xl font-bold italic text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300 rounded-md p-1 ">
-            Ecommerce
+           KingMall
           </h1>
         )}
         <FaBars
@@ -39,7 +41,7 @@ export const Sidebar = () => {
       {isSidebarOpen && (
         <div className="text-lg font-semibold mb-8">
           <p>
-            Welcome, <span className="text-blue-300">{user}</span>
+            Welcome, <span className="text-blue-300">{user.username.username}</span>
           </p>
         </div>
       )}

@@ -23,7 +23,7 @@ const Login = () => {
 
       if (response.status === 200) {
         // Save user data to state or local storage
-
+console.log(response.data, "user")
         localStorage.setItem('user', JSON.stringify(response.data.user));
         setMessage(`Welcome, ${response.data.user.username}!`);
         navigate('/color');
