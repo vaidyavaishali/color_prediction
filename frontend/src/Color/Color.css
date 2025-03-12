@@ -443,9 +443,7 @@ onClick={() => handleNumberSelect(number)}
       font-size: 2rem;
     }
   
-    /* .color-buttons {
-      /* grid-template-columns: 3fr; */
-    /* } */ */
+
   
     .number-grid {
       grid-template-columns: repeat(5, 1fr);
