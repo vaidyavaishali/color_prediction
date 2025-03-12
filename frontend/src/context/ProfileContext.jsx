@@ -4,6 +4,7 @@ import axios from 'axios';
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
+    const Api_url = "https://color-prediction-api.vercel.app";
     const [profile, setProfile] = useState({ username: 'Demo', walletBalance: 0, email: "", userId: "", referalId: "" });
 
     const fetchNameWallet = async () => {
@@ -19,7 +20,7 @@ export const ProfileProvider = ({ children }) => {
         const id = objectId.id; // Extract the user ID
         try {
             // console.log("id", id)
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/name/${id}`);
+            const res = await axios.get(`${Api_url}/api/name/${id}`);
             // console.log(res, "res")
             setProfile({
                 username: res.data.username,

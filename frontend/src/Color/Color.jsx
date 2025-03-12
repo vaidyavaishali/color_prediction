@@ -32,9 +32,10 @@ const Color = () => {
   }, []);
 
   const fetchData = async () => {
+    const Api_url = "https://color-prediction-api.vercel.app"
     try {
       localStorage.removeItem("prevRoundId")
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/get-lastRoundId`);
+      const response = await axios.get(`${Api_url}/api/color/get-lastRoundId`);
       console.log(response.data.roundId)
       localStorage.setItem("prevRoundId", response.data.roundId)
       setPrevRoundId(response.data.roundId);
@@ -102,7 +103,7 @@ const Color = () => {
   const fetchRandomNumber = async () => {
     try {
       // console.log(roundId, "roundId")
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/get-random-color-by-id/${roundId}`);
+      const { data } = await axios.get(`${Api_url}/api/color/get-random-color-by-id/${roundId}`);
       // if(!data) setColorResult(Math.floor(Math.random() * 10))
       localStorage.setItem("colorResult", data.randomNumber);
       setColorResult(data.randomNumber);
@@ -122,7 +123,7 @@ const Color = () => {
       // console.log(profile.userId)
       const user = JSON.parse(localStorage.getItem("user"));
       // console.log(user.id);
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/history/${user.id}`);
+      const { data } = await axios.get(`${Api_url}/api/color/history/${user.id}`);
       setHistoryByd(data);
       // console.log(data, "history")
     } catch (error) {

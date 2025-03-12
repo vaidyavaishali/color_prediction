@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
+   const Api_url = "https://color-prediction-api.vercel.app"
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const AdminLogin = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/admin/login`,
+        `${Api_url}/api/admin/login`,
         formData
       );
 

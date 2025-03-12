@@ -88,6 +88,7 @@ const Modal = styled.div`
 `;
 
 const AdminRandomNumbers = () => {
+     const Api_url = "https://color-prediction-api.vercel.app"
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [roundId, setRoundId] = useState("");
@@ -99,7 +100,7 @@ const AdminRandomNumbers = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/get-random-color`);
+            const response = await axios.get(`${Api_url}/api/color/get-random-color`);
             setData(response.data);
         } catch (error) {
             console.error("Error fetching data", error);
@@ -108,7 +109,7 @@ const AdminRandomNumbers = () => {
 
     const handleAdd = async () => {
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/color/select-random-color`, { roundId, randomNumber });
+            await axios.post(`${Api_url}/api/color/select-random-color`, { roundId, randomNumber });
             fetchData();
             setShowModal(false);
         } catch (error) {
@@ -129,7 +130,7 @@ const AdminRandomNumbers = () => {
                 cancelButtonColor: "#d32f2f",
             });
             if (swalResult.isConfirmed) {
-                await axios.delete(`${process.env.REACT_APP_API_URL}/api/color/delete-random-color/${roundId}`);
+                await axios.delete(`${Api_url}/api/color/delete-random-color/${roundId}`);
                 fetchData(); // Refresh data after deletion
                 await Swal.fire({
                     title: "Deleted!",

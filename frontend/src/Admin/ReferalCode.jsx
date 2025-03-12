@@ -6,6 +6,7 @@ import SidebarComponent from "./Sidbar";
 
 
 const AdminReferralCodes = () => {
+     const Api_url = "https://color-prediction-api.vercel.app"
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [referalCode, setReferalCode] = useState("");
@@ -16,7 +17,7 @@ const AdminReferralCodes = () => {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/get-referal-code`);
+            const response = await axios.get(`${Api_url}/api/color/get-referal-code`);
             setData(response.data);
         } catch (error) {
             console.error("Error fetching referral codes", error);
@@ -30,7 +31,7 @@ const AdminReferralCodes = () => {
         }
 
         try {
-            await axios.post(`${process.env.REACT_APP_API_URL}/api/color/add-referal-code`, { referalCode });
+            await axios.post(`${Api_url}/api/color/add-referal-code`, { referalCode });
             fetchData();
             setShowModal(false);
             setReferalCode("");
@@ -55,7 +56,7 @@ const AdminReferralCodes = () => {
 
         if (swalResult.isConfirmed) {
             try {
-                await axios.delete(`${process.env.REACT_APP_API_URL}/api/color/add-referal-code/${id}`);
+                await axios.delete(`${Api_url}/api/color/add-referal-code/${id}`);
                 fetchData();
                 Swal.fire("Deleted!", "Referral code has been deleted.", "success");
             } catch (error) {

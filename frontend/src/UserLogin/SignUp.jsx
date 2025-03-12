@@ -33,7 +33,7 @@ const [referalId, setReferalId] = useState('');
     const userData = { username, email, password, referalId };
     console.log(userData)
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/signup`, userData);
+      const response = await axios.post(`https://color-prediction-api.vercel.app/api/signup`, userData);
 
     //   const data = await response.json();
 

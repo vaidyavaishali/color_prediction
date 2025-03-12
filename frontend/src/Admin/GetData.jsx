@@ -4,6 +4,7 @@ import axios from "axios";
 import SidebarComponent from "./Sidbar";
 
 const GetBetData = () => {
+   const Api_url = "https://color-prediction-api.vercel.app"
   const [history, setHistory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const GetBetData = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/color/history-all`);
+      const response = await axios.get(`${Api_url}/api/color/history-all`);
       setHistory(response.data);
     } catch (error) {
       console.error("Error fetching history:", error);
@@ -44,7 +45,7 @@ const GetBetData = () => {
 
   const handleReset = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/color/reset-game`);
+      await axios.delete(`${Api_url}/api/color/reset-game`);
       fetchHistory();
     } catch (error) {
       console.error("Error resetting matches:", error);
