@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 
 const AdminReferralCodes = () => {
-    const API_Url = "http://localhost:5000"
+ const API_Url = "https://color-prediction-api.vercel.app"
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [referalCode, setReferalCode] = useState("");

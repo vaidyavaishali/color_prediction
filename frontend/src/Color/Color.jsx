@@ -10,7 +10,9 @@ const Color = () => {
 
   const [selectedNumber, setSelectedNumber] = useState(() => sessionStorage.getItem("selectedNumber") || null);
   const [betAmount, setBetAmount] = useState(() => sessionStorage.getItem("betAmount") || 0);
-  const [roundId, setRoundId] = useState(
+  // const [roundId, setRoundId] = useState(localStorage.getItem("prevRoundId"));
+
+     const [roundId, setRoundId] = useState(
     localStorage.getItem("prevRoundId") || `R${new Date().getTime()}`
   );
   // const [roundId, setRoundId] = useState();

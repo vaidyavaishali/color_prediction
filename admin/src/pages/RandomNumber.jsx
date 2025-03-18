@@ -97,7 +97,7 @@ const Modal = styled.div`
 
 const AdminRandomNumbers = () => {
     console.log(process.env.REACT_APP_API_URL)
-      const API_Url = "http://localhost:5000"
+      const API_Url = "https://color-prediction-api.vercel.app"
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [roundId, setRoundId] = useState("");

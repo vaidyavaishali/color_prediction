@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 
 const GetBetData = () => {
-    const API_Url = "http://localhost:5000";
+    const API_Url = "https://color-prediction-api.vercel.app";
     const [history, setHistory] = useState([]);
     const [filteredHistory, setFilteredHistory] = useState([]);
     const [filterReferalId, setFilterReferalId] = useState("");
