@@ -21,7 +21,7 @@ export const ProfileProvider = ({ children }) => {
         const id = objectId.id; // Extract the user ID
         try {
             // console.log("id", id)
-            const res = await axios.get(`http://localhost:5000/api/name/${id}`);
+            const res = await axios.get(`https://color-prediction-api.vercel.app/api/name/${id}`);
             console.log(res, "res")
             setProfile({
                 referalId: res.data.referalId, 
