@@ -7,9 +7,9 @@ exports.placeBet = async (req, res) => {
         const { amount, walletBalance, selectedNumber, newRoundId, user, referalId } = req.body;
         const existuser = await User.findOne({ _id: user });
         console.log(req.body)
-        // console.log(existuser, "existuser")
+        console.log(existuser, "existuser")
         if (existuser) {
-            existuser.wallet -= amount;
+            existuser.wallet = existuser.wallet - amount;
             await existuser.save();
         }
 

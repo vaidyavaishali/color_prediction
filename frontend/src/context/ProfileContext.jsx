@@ -8,10 +8,10 @@ export const ProfileProvider = ({ children }) => {
     const [profile, setProfile] = useState({ username: 'Demo', walletBalance: 0, email: "", userId: "", referalId: "" });
 
     const fetchNameWallet = async () => {
-        console.log("usrer")
+        // console.log("usrer")
         // console.log("ok")
         const userData = localStorage.getItem('user');
-        console.log(userData, "user")
+        // console.log(userData, "user")
         if (!userData) {
             console.error('User data not found in localStorage');
             return;
@@ -22,8 +22,9 @@ export const ProfileProvider = ({ children }) => {
         try {
             // console.log("id", id)
             const res = await axios.get(`http://localhost:5000/api/name/${id}`);
-            console.log(res, "res")
+            // console.log(res, "res")
             setProfile({
+                userId: id,
                 referalId: res.data.referalId, 
                 email: res.data.email, 
                 wallet: res.data.wallet || 0, 

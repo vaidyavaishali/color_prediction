@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useProfile } from '../context/ProfileContext';
 const Color = () => {
     const Api_url = "https://color-prediction-api.vercel.app"
+    // const Api_url = "http://localhost:5000";
   const { profile, fetchNameWallet } = useProfile();
   // const [timeLeft, setTimeLeft] = useState(30);
   // const [selectedNumber, setSelectedNumber] = useState(null);
@@ -16,7 +17,7 @@ const Color = () => {
     localStorage.getItem("prevRoundId") || `R${new Date().getTime()}`
   );
   // const [roundId, setRoundId] = useState();
-
+// console.log(profile)
   // const [betAmount, setBetAmount] = useState(0);
   const [timerDuration, setTimerDuration] = useState(30);
   const [timeLeft, setTimeLeft] = useState(timerDuration);
