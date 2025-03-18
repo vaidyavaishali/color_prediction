@@ -226,7 +226,7 @@ const Color = () => {
     if (selectedNumber) {
       const colorResult = localStorage.getItem("colorResult");
       const isWin = selectedNumber === colorResult;
-console.log(colorResult, "colorResult")
+// console.log(colorResult, "colorResult")
       if (localStorage.getItem("betAmount") > 0) {
         try {
           const { data } = await axios.put(
@@ -256,15 +256,9 @@ console.log(colorResult, "colorResult")
       }
     }
     fetchGameHistory()
-    // await fetchRandomNumber(); // Ensure the result is fetched before proceeding
-
-    // const selectedNumber = localStorage.getItem("selectedNumber");
-    // if (!selectedNumber) return;
-
-
   };
 
-console.log(selectedNumber, "selectedNumber")
+// console.log(selectedNumber, "selectedNumber")
   const placeBet = async () => {
     if (betAmount <= 0) {
       setResult({ status: 'error', message: 'Please select a bet amount!' });
