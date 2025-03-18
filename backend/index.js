@@ -21,6 +21,6 @@ app.use('/api/color', colorPredictionRoutes);
 app.use('/api', adminRoutes)
 
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// module.exports = app;
+// const PORT = process.env.PORT || 8080;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+module.exports = app;

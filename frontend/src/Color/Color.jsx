@@ -3,55 +3,42 @@ import './Color.css';
 import axios from 'axios';
 import { useProfile } from '../context/ProfileContext';
 const Color = () => {
-    const Api_url = "https://color-prediction-api.vercel.app"
-    // const Api_url = "http://localhost:5000";
+  const Api_url = "https://color-prediction-api.vercel.app"
+  // const Api_url = "http://localhost:5000";
   const { profile, fetchNameWallet } = useProfile();
   // const [timeLeft, setTimeLeft] = useState(30);
   // const [selectedNumber, setSelectedNumber] = useState(null);
 
   const [selectedNumber, setSelectedNumber] = useState(() => sessionStorage.getItem("selectedNumber") || null);
   const [betAmount, setBetAmount] = useState(() => sessionStorage.getItem("betAmount") || 0);
-  // const [roundId, setRoundId] = useState(localStorage.getItem("prevRoundId"));
-
-     const [roundId, setRoundId] = useState(
-    localStorage.getItem("prevRoundId") || `R${new Date().getTime()}`
-  );
-  // const [roundId, setRoundId] = useState();
-// console.log(profile)
-  // const [betAmount, setBetAmount] = useState(0);
-  const [timerDuration, setTimerDuration] = useState(30);
+  const [roundId, setRoundId] = useState(`R${new Date().getTime()}`)
+  const [timerDuration, setTimerDuration] = useState(15);
   const [timeLeft, setTimeLeft] = useState(timerDuration);
   const [showBetModal, setShowBetModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [result, setResult] = useState({ status: '', message: '' });
-  const localuser = localStorage.getItem("user");
   const [walletBalance, setWalletBalance] = useState(profile.walletBalance);
   const [history, setHistory] = useState([]);
   const [period, setPeriod] = useState(1);
   const [isBettingOpen, setIsBettingOpen] = useState(true);
-  // const [roundId, setRoundId] = useState(() => `R${Date.now().toString()}`);
   const [prevRoundId, setPrevRoundId] = useState("")
   const [timer_thirty, setTimertimer_thirty] = useState(true)
-
+  const [isBetPlace, setIsBetPlace] = useState(false)
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-  
+
     try {
       localStorage.removeItem("prevRoundId")
       const response = await axios.get(`${Api_url}/api/color/get-lastRoundId`);
-      console.log(response.data.roundId)
       localStorage.setItem("prevRoundId", response.data.roundId)
       setPrevRoundId(response.data.roundId);
     } catch (error) {
       console.error("Error fetching data", error);
     }
   };
-
-
-
   useEffect(() => {
     sessionStorage.setItem("selectedNumber", selectedNumber);
     sessionStorage.setItem("betAmount", betAmount);
@@ -72,10 +59,15 @@ const Color = () => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
-          handleGameEnd();
+          if (selectedNumber !== null) {
+            handleGameEnd();
+          }
+
           fetchRandomNumber();
+          // localStorage.setItem()
           const PreviousRoundId = localStorage.getItem("prevRoundId")
-          const newRoundId = `R${parseInt(PreviousRoundId.slice(1)) + 1}`;
+          // const newRoundId = `R${parseInt(PreviousRoundId.slice(1)) + 1}`;
+          const newRoundId = `R${Date.now().toString()}`;
           setRoundId(newRoundId);
           localStorage.setItem("roundId", newRoundId);
           return timerDuration; // Restart timer
@@ -91,13 +83,15 @@ const Color = () => {
 
   const toggleTimer = (timer) => {
     setTimerDuration(prev => {
+      fetchRandomNumber()
       const newDuration = timer;
       setTimeLeft(newDuration); // Reset timeLeft immediately
       const PreviousRoundId = localStorage.getItem("prevRoundId")
-      const newRoundId = `R${parseInt(PreviousRoundId.slice(1)) + 1}`;
+      // const newRoundId = `R${parseInt(PreviousRoundId.slice(1)) + 1}`;
+      const newRoundId = `R${Date.now().toString()}`;
       setRoundId(newRoundId);
       localStorage.removeItem("prevRoundId")
-      localStorage.setItem("prevRoundId", newRoundId);
+      localStorage.setItem("roundId", newRoundId);
 
       return newDuration;
     });
@@ -109,7 +103,7 @@ const Color = () => {
   const fetchRandomNumber = async () => {
     try {
       // console.log(roundId, "roundId")
-      const { data } = await axios.get(`${Api_url}/api/color/get-random-color-by-id/${roundId}`);
+      const { data } = await axios.get(`${Api_url}/api/color/get-lastRoundId`);
       // if(!data) setColorResult(Math.floor(Math.random() * 10))
       localStorage.setItem("colorResult", data.randomNumber);
       setColorResult(data.randomNumber);
@@ -119,10 +113,10 @@ const Color = () => {
       console.error("Error fetching random number", error);
     }
   }
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   fetchRandomNumber();
-  // }, [])
+    fetchRandomNumber();
+  }, [])
   const fetchGameHistory = async () => {
     try {
 
@@ -173,65 +167,107 @@ const Color = () => {
     setBetAmount(amount);
   };
   // console.log(selectedNumber, betAmount)
+  // const handleGameEnd = async () => {
+  //   console.log(selectedNumber)
+  //   if (!selectedNumber) return
+
+  //   const isWin = localStorage.getItem("selectedNumber") === localStorage.getItem("colorResult");
+  //   if (localStorage.getItem("betAmount") > 0) {
+  //     try {
+  //       const { data } = await axios.put(
+  //         `${Api_url}/api/color/process-result/${roundId}`,
+  //         {
+  //           winAmt: isWin ? localStorage.getItem("betAmount") * 1.98 : 0,
+  //           winningNumber: localStorage.getItem("colorResult"),
+  //           isWin: isWin ? "Win" : "Lost",
+  //           userId: JSON.parse(localStorage.getItem("user")).id,
+  //           resultColor: localStorage.getItem("colorResult")
+  //         }
+  //       );
+  //       setShowResultModal(true);
+  //       // console.log(data, "data")
+  //       if (data.success) {
+
+  //         if (isWin) {
+  //           setWalletBalance((prev) => prev + betAmount * 1.98);
+  //           setResult({ status: 'won', message: `You won ₹${(localStorage.getItem("betAmount") * 1.98).toFixed(2)}! Winning number: ${localStorage.getItem("colorResult")}` });
+  //         } else {
+  //           setWalletBalance((prev) => prev + betAmount * 0.05);
+  //           setResult({ status: 'lost', message: `You lost ₹${localStorage.getItem("betAmount")}! Winning number: ${localStorage.getItem("colorResult")}` });
+  //         }
+  //         setTimeout(() => {
+  //           // localStorage.removeItem("selectedNumber");
+  //           // localStorage.removeItem("betAmount");
+  //           // localStorage.removeItem("roundId")
+  //           // localStorage.removeItem("result")
+  //           // localStorage.removeItem("colorResult")
+  //         }, 1000);
+
+  //         // fetchGameHistory();
+  //         // setSelectedNumber(null);
+  //         setBetAmount(0);
+  //         setIsBettingOpen(true);
+  //         setShowBetModal(false);
+  //         setTimeout(() => setShowResultModal(false), 2000);
+
+  //       } else {
+  //         setResult({ status: "error", message: data.message });
+  //         setShowResultModal(true);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error processing result", error);
+  //       setResult({ status: "error", message: "Failed to process result" });
+  //       setShowResultModal(true);
+  //       setTimeout(() => {
+  //         setShowResultModal(false)
+  //       }, 200);
+  //     }
+  //   }
+  // };
+
   const handleGameEnd = async () => {
-    fetchRandomNumber()
-    if (!selectedNumber) return
+    if (selectedNumber) {
+      const colorResult = localStorage.getItem("colorResult");
+      const isWin = selectedNumber === colorResult;
+console.log(colorResult, "colorResult")
+      if (localStorage.getItem("betAmount") > 0) {
+        try {
+          const { data } = await axios.put(
+            `${Api_url}/api/color/process-result/${roundId}`,
+            {
+              winAmt: isWin ? localStorage.getItem("betAmount") * 1.98 : 0,
+              winningNumber:colorResult || localStorage.getItem("colorResult"),
+              isWin: isWin ? "Win" : "Lost",
+              userId: JSON.parse(localStorage.getItem("user")).id,
+              resultColor: colorResult || localStorage.getItem("colorResult"),
+            }
+          );
+          console.log("Game result processed:", data);
+          if(data.game.isWin == "Won"){
+            setResult({ status: 'won', message: `You won ₹${(localStorage.getItem("betAmount") * 1.98).toFixed(2)}! Winning number: ${colorResult || localStorage.getItem("colorResult")}` });
 
-    const isWin = localStorage.getItem("selectedNumber") === localStorage.getItem("colorResult");
-    // console.log(localStorage.getItem("colorResult"), "color")
-    if (localStorage.getItem("betAmount") > 0) {
-      // console.log("ok")
-      try {
-        const { data } = await axios.put(
-          `${Api_url}/api/color/process-result/${roundId}`,
-          {
-            winAmt: isWin ? localStorage.getItem("betAmount") * 1.98 : 0,
-            winningNumber: localStorage.getItem("colorResult"),
-            isWin: isWin ? "Win" : "Lost",
-            userId: JSON.parse(localStorage.getItem("user")).id,
-            resultColor: localStorage.getItem("colorResult"),
-
-
+          }else{
+            setResult({ status: 'lost', message: `You lost ₹${localStorage.getItem("betAmount")}! Winning number: ${colorResult || localStorage.getItem("colorResult")}` });
           }
-        );
-        setShowResultModal(true);
-        // console.log(data, "data")
-        if (data.success) {
-
-          if (isWin) {
-            setWalletBalance((prev) => prev + betAmount * 1.98);
-            setResult({ status: 'won', message: `You won ₹${(localStorage.getItem("betAmount") * 1.98).toFixed(2)}! Winning number: ${localStorage.getItem("colorResult")}` });
-          } else {
-            setWalletBalance((prev) => prev + betAmount * 0.05);
-            setResult({ status: 'lost', message: `You lost ₹${localStorage.getItem("betAmount")}! Winning number: ${localStorage.getItem("colorResult")}` });
-          }
-          setTimeout(() => {
-            localStorage.removeItem("selectedNumber");
-            localStorage.removeItem("betAmount");
-            localStorage.removeItem("roundId")
-            localStorage.removeItem("result")
-            localStorage.removeItem("colorResult")
-          }, 1000);
-
-          fetchGameHistory();
-          setSelectedNumber(null);
-          setBetAmount(0);
-          setIsBettingOpen(true);
-          setShowBetModal(false);
-          setTimeout(() => setShowResultModal(false), 2000);
-
-        } else {
-          setResult({ status: "error", message: data.message });
           setShowResultModal(true);
+          setTimeout(() => {
+            setShowResultModal(false);
+          }, 1000);
+        } catch (error) {
+          console.error("Error processing result", error);
         }
-      } catch (error) {
-        console.error("Error processing result", error);
-        setResult({ status: "error", message: "Failed to process result" });
-        setShowResultModal(true);
       }
     }
+    fetchGameHistory()
+    // await fetchRandomNumber(); // Ensure the result is fetched before proceeding
+
+    // const selectedNumber = localStorage.getItem("selectedNumber");
+    // if (!selectedNumber) return;
+
+
   };
 
+console.log(selectedNumber, "selectedNumber")
   const placeBet = async () => {
     if (betAmount <= 0) {
       setResult({ status: 'error', message: 'Please select a bet amount!' });
@@ -246,6 +282,7 @@ const Color = () => {
     try {
       // const newRoundId = `R${Date.now().toString()}`; // Generate roundId if needed
       // setRoundId(newRoundId);
+      fetchRandomNumber()
       const { data } = await axios.post(`${Api_url}/api/color/place-bet`, {
         amount: betAmount,
         user: profile.userId,
@@ -261,9 +298,11 @@ const Color = () => {
         setIsBettingOpen(true);
         localStorage.setItem("selectedNumber", selectedNumber)
         localStorage.setItem("betAmount", betAmount)
-        // localStorage.setItem("roundId", newRoundId)
+        localStorage.setItem("roundId", roundId)
+
         setResult({ status: 'Success', message: `Bet Placed ${betAmount} on ${selectedNumber}` });
         setShowResultModal(true);
+        setIsBetPlace(true)
         setTimeout(() => setShowResultModal(false), 2000);
       } else {
         setResult({ status: "error", message: data.message });
@@ -281,7 +320,7 @@ const Color = () => {
     <div className="container">
       <div className="header">
         <h1 className="title">Color Prediction</h1>
-        <div className="balance">Balance: ₹{profile.walletBalance}</div>
+        <div className="balance">Balance: ₹{profile.wallet}</div>
         {/* {timer_thirty ? */}
         <div style={{ display: "flex", "gap": "20px", "justifyContent": "center" }}>
           <button
@@ -332,7 +371,7 @@ const Color = () => {
         <div className="game-section">
           <div className="game-card">
             <div className="text-lg font-semibold flex justify-between period-header">
-              <span>🏆 Period {" "} {roundId}</span>
+              <span>🏆 Period {" "} {roundId || localStorage.getItem('roundId')}</span>
             </div>
             <div className="timer">
               <div className="timer-label">Time Remaining</div>
@@ -386,7 +425,7 @@ const Color = () => {
 
                 <button
                   key={number}
-                  className={`number-btn ${color}-number ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) && 'disabled'}  ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? '' :"shining-effect" } `}
+                  className={`number-btn ${color}-number ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) && 'disabled'}  ${(!isBettingOpen || (timer_thirty && timeLeft <= 10) || (!timer_thirty && timeLeft <= 30)) ? '' : "shining-effect"} `}
                   disabled={!isBettingOpen || timeLeft <= 10}
                   onClick={() => handleNumberSelect(number)}
                 >

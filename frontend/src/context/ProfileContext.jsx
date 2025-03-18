@@ -4,7 +4,7 @@ import axios from 'axios';
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
-    const Api_url = "http://localhost:5000";
+    // const Api_url = "http://localhost:5000";
     const [profile, setProfile] = useState({ username: 'Demo', walletBalance: 0, email: "", userId: "", referalId: "" });
 
     const fetchNameWallet = async () => {

@@ -38,11 +38,11 @@ exports.placeBet = async (req, res) => {
 
 // Process game result
 exports.processResult = async (req, res) => {
-    console.log("ok")
+    // console.log("ok")
     try {
         const { roundId } = req.params;
-        const { winningNumber, userId } = req.body;
-        // console.log(req.body)
+        const { winningNumber,resultColor, userId } = req.body;
+        console.log(req.body, roundId)
         const game = await colorModels.findOne({ roundId: roundId });
         // console.log(game)
 
@@ -54,7 +54,7 @@ exports.processResult = async (req, res) => {
         if (!game) return res.status(404).json({ message: "Game not found" });
         let winAmount = 0;
         let isWinner = false;
-        if (winningNumber == game.predictedColor) {
+        if (resultColor == game.predictedColor) {
             winAmount = game.betAmout * 1.98;
             isWinner = "Won";
             // game.resultColor = winningNumber
@@ -74,7 +74,7 @@ exports.processResult = async (req, res) => {
             }
         }
         // await wallet.save();
-        game.resultColor = winningNumber;
+        game.resultColor = resultColor;
         game.winAmt = winAmount;
         game.isWin = isWinner;
         if (isWinner) {
@@ -84,8 +84,8 @@ exports.processResult = async (req, res) => {
         }
 
         // game.walletBalance += winAmount
-        console.log("after update", game)
-        console.log("after update", user)
+        // console.log("after update", game)
+        // console.log("after update", user)
         await game.save();
         res.status(200).json({ success: true, message: isWinner ? "You won!" : "You lost!", game });
     } catch (error) {
@@ -99,7 +99,7 @@ exports.processResult = async (req, res) => {
 exports.getHistory = async (req, res) => {
     try {
         const { userId } = req.params
-        const history = await colorModels.find({ user: userId })
+        const history = await colorModels.find({ user: userId }).sort({createdAt:-1})
         res.json(history);
     } catch (error) {
         console.error("Error fetching history:", error);
@@ -109,7 +109,7 @@ exports.getHistory = async (req, res) => {
 exports.getallHistory = async (req, res) => {
     try {
         // const { userId } = req.params
-        const history = await colorModels.find()
+        const history = await colorModels.find().sort({ createdAt: -1 })
         res.json(history);
     } catch (error) {
         console.error("Error fetching history:", error);

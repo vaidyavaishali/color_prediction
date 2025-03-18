@@ -96,7 +96,7 @@ const Modal = styled.div`
 `;
 
 const AdminRandomNumbers = () => {
-    console.log(process.env.REACT_APP_API_URL)
+    // console.log(process.env.REACT_APP_API_URL)
       const API_Url = "https://color-prediction-api.vercel.app"
     const [data, setData] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -206,15 +206,15 @@ const AdminRandomNumbers = () => {
                                 placeholder="Round ID"
                                 value={roundId}
                                 onChange={(e) => setRoundId(e.target.value)}
-                                style={{ padding: "8px", margin: "5px 0", width: "100%" }}
+                                style={{ padding: "8px", margin: "5px 0", width: "100%", color: "black" }}
                             />
                             <label style={{ display: "block", marginBottom: "5px" }}>Random Number:</label>
                             <input
-                                type="number"
+                                type="text"
                                 placeholder="Random Number"
                                 value={randomNumber}
                                 onChange={(e) => setRandomNumber(e.target.value)}
-                                style={{ padding: "8px", margin: "5px 0", width: "100%" }}
+                                style={{ padding: "8px", margin: "5px 0", width: "100%", color: "black" }}
                             />
                             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                                 <Button style={{ marginRight: "10px" }} onClick={handleAdd}>Submit</Button>

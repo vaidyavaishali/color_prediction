@@ -12,6 +12,10 @@ const getAllRandomNumbers = async (req, res) => {
 const getLastRoundId = async (req, res) => {
     try {
         const roundId = await randomcolorModels.findOne().sort({ createdAt: -1 });
+        if (!roundId.randomNumber) {
+            const randomNumber = Math.floor(Math.random() * 10);
+            numbers = { roundId: roundId, randomNumber: randomNumber };
+        }
         res.status(200).json(roundId);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
