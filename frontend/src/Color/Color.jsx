@@ -12,14 +12,14 @@ const Color = () => {
   const [selectedNumber, setSelectedNumber] = useState(() => sessionStorage.getItem("selectedNumber") || null);
   const [betAmount, setBetAmount] = useState(() => sessionStorage.getItem("betAmount") || 0);
   const [roundId, setRoundId] = useState(`R${new Date().getTime()}`)
-  const [timerDuration, setTimerDuration] = useState(15);
+  const [timerDuration, setTimerDuration] = useState(30);
   const [timeLeft, setTimeLeft] = useState(timerDuration);
   const [showBetModal, setShowBetModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [result, setResult] = useState({ status: '', message: '' });
   const [walletBalance, setWalletBalance] = useState(profile.walletBalance);
-  const [history, setHistory] = useState([]);
-  const [period, setPeriod] = useState(1);
+  // const [history, setHistory] = useState([]);
+  // const [period, setPeriod] = useState(1);
   const [isBettingOpen, setIsBettingOpen] = useState(true);
   const [prevRoundId, setPrevRoundId] = useState("")
   const [timer_thirty, setTimertimer_thirty] = useState(true)
@@ -96,9 +96,6 @@ const Color = () => {
       return newDuration;
     });
   };
-
-  // console.log(timerDuration)
-  // console.log(timeLeft, "left")
 
   const fetchRandomNumber = async () => {
     try {

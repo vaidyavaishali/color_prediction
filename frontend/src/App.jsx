@@ -5,11 +5,6 @@ import Color from "./Color/Color";
 import UserLogin from "./UserLogin/UserLogin";
 import RegistrationPage from "./UserLogin/SignUp";
 import {ProfileProvider} from "./context/ProfileContext";
-// import AdminRandomNumbers from "./Admin/PostRandomColor";
-// import GetBetData from "./Admin/GetData";
-// import AdminReferralCodes from "./Admin/ReferalCode";
-// import AdminLogin from "./Admin/AdminLogin";
-// import DashBoard from "./Admin/DashBoard";
 const App = () => {
   return (
     <>
