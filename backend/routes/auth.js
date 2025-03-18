@@ -92,22 +92,31 @@ router.post('/login', async (req, res) => {
   }
 });
 router.get('/name/:id', async (req, res) => {
-  const { id } = req.params; // Access the 'id' from the URL parameter
-  try {
-    // Find the user by the provided ID from MongoDB
-    const user = await User.findById(id);
-    // const Wallet = await User_Wallet.findOne({ user: id });
-    // console.log(user)
+  const { id } = req.params;
+  // console.log(id, "id")
 
+  try {
+    // Find the user and wallet by ID
+    const user = await User.findById(id);
+    // const user = await User.find();
+    // const wallet = await User_Wallet.findOne({ user: id });
+    // console.log(user)
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Respond with the username
-    res.json({ username: user.username, walletBalance: user.wallet, email: user.email });
+    // Respond with username, wallet balance, exposure balance, and email
+    res.json({
+      referalId: user.referalId,
+      email: user.email,
+      wallet: user.wallet || 0,
+      username: user.username,
+      // userNo: user.userNo 
+    });
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).json({ message: 'Internal server error' });
+
+    res.status(500).json({ message: error.message });
   }
 });
 

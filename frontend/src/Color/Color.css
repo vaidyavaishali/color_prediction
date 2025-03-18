@@ -284,6 +284,7 @@ onClick={() => handleNumberSelect(number)}
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    z-index: 9999;
   }
   
   .modal-content,

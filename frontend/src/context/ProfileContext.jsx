@@ -4,10 +4,11 @@ import axios from 'axios';
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
-    const Api_url = "https://color-prediction-api.vercel.app";
+    const Api_url = "http://localhost:5000";
     const [profile, setProfile] = useState({ username: 'Demo', walletBalance: 0, email: "", userId: "", referalId: "" });
 
     const fetchNameWallet = async () => {
+        console.log("usrer")
         // console.log("ok")
         const userData = localStorage.getItem('user');
         console.log(userData, "user")
@@ -20,14 +21,13 @@ export const ProfileProvider = ({ children }) => {
         const id = objectId.id; // Extract the user ID
         try {
             // console.log("id", id)
-            const res = await axios.get(`${Api_url}/api/name/${id}`);
-            // console.log(res, "res")
+            const res = await axios.get(`http://localhost:5000/api/name/${id}`);
+            console.log(res, "res")
             setProfile({
+                referalId: res.data.referalId, 
+                email: res.data.email, 
+                wallet: res.data.wallet || 0, 
                 username: res.data.username,
-                walletBalance: res.data.walletBalance,
-                email: res.data.email,
-                userId: id,
-                referalId: objectId.referalId
             });
             // console.log(profile, "profile")
         } catch (err) {

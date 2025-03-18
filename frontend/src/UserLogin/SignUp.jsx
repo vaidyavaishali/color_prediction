@@ -36,7 +36,6 @@ const [referalId, setReferalId] = useState('');
       const response = await axios.post(`https://color-prediction-api.vercel.app/api/signup`, userData);
 
     //   const data = await response.json();
-
       if (response.status === 201) {
         setSuccess('User registered successfully!');
         setError('');
