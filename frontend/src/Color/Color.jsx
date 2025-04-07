@@ -3,7 +3,7 @@ import './Color.css';
 import axios from 'axios';
 import { useProfile } from '../context/ProfileContext';
 const Color = () => {
-  const Api_url = "https://color-prediction-api.vercel.app"
+  const Api_url = "https://color-prediction-peach.vercel.app"
   // const Api_url = "http://localhost:5000";
   const { profile, fetchNameWallet } = useProfile();
   // const [timeLeft, setTimeLeft] = useState(30);
