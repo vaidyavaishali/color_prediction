@@ -311,7 +311,7 @@ const Color = () => {
     <div className="container">
       <div className="header">
         <h1 className="title">Color Prediction</h1>
-        <div className="balance">Balance: ₹{profile.wallet}</div>
+        <div className="balance">Balance: ₹{walletBalance}</div>
         {/* {timer_thirty ? */}
         <div style={{ display: "flex", "gap": "20px", "justifyContent": "center" }}>
           <button
