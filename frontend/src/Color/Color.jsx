@@ -17,7 +17,7 @@ const Color = () => {
   const [showBetModal, setShowBetModal] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
   const [result, setResult] = useState({ status: '', message: '' });
-  const [walletBalance, setWalletBalance] = useState(profile.walletBalance);
+  const [walletBalance, setWalletBalance] = useState(profile.walletBalance || 150000);
   // const [history, setHistory] = useState([]);
   // const [period, setPeriod] = useState(1);
   const [isBettingOpen, setIsBettingOpen] = useState(true);
